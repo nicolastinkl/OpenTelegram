@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.telegram.ui.Components.BackupImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/biv_icon"
+    android:layout_width="60dp"
+    android:layout_height="60dp"/>

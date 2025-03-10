@@ -1,0 +1,51 @@
+package com.google.android.material;
+
+/* loaded from: classes.dex */
+public final class R$dimen {
+    public static final int design_appbar_elevation = 2131165281;
+    public static final int design_bottom_sheet_peek_height_min = 2131165296;
+    public static final int design_fab_size_mini = 2131165300;
+    public static final int design_fab_size_normal = 2131165301;
+    public static final int design_navigation_icon_size = 2131165306;
+    public static final int design_snackbar_padding_vertical = 2131165320;
+    public static final int design_snackbar_padding_vertical_2lines = 2131165321;
+    public static final int design_textinput_caption_translate_y = 2131165327;
+    public static final int material_clock_hand_center_dot_radius = 2131165342;
+    public static final int material_clock_hand_padding = 2131165343;
+    public static final int material_clock_hand_stroke_width = 2131165344;
+    public static final int material_clock_size = 2131165349;
+    public static final int material_filled_edittext_font_1_3_padding_bottom = 2131165356;
+    public static final int material_filled_edittext_font_1_3_padding_top = 2131165357;
+    public static final int material_filled_edittext_font_2_0_padding_bottom = 2131165358;
+    public static final int material_filled_edittext_font_2_0_padding_top = 2131165359;
+    public static final int material_font_1_3_box_collapsed_padding_top = 2131165360;
+    public static final int material_font_2_0_box_collapsed_padding_top = 2131165361;
+    public static final int material_helper_text_default_padding_top = 2131165362;
+    public static final int material_helper_text_font_1_3_padding_horizontal = 2131165363;
+    public static final int material_helper_text_font_1_3_padding_top = 2131165364;
+    public static final int material_input_text_to_prefix_suffix_padding = 2131165365;
+    public static final int material_time_picker_minimum_screen_height = 2131165371;
+    public static final int material_time_picker_minimum_screen_width = 2131165372;
+    public static final int mtrl_bottomappbar_fab_bottom_margin = 2131165388;
+    public static final int mtrl_calendar_bottom_padding = 2131165420;
+    public static final int mtrl_calendar_content_padding = 2131165421;
+    public static final int mtrl_calendar_day_height = 2131165423;
+    public static final int mtrl_calendar_day_width = 2131165427;
+    public static final int mtrl_calendar_days_of_week_height = 2131165428;
+    public static final int mtrl_calendar_dialog_background_inset = 2131165429;
+    public static final int mtrl_calendar_month_horizontal_padding = 2131165441;
+    public static final int mtrl_calendar_month_vertical_padding = 2131165442;
+    public static final int mtrl_calendar_navigation_bottom_padding = 2131165443;
+    public static final int mtrl_calendar_navigation_height = 2131165444;
+    public static final int mtrl_calendar_navigation_top_padding = 2131165445;
+    public static final int mtrl_edittext_rectangle_top_offset = 2131165467;
+    public static final int mtrl_exposed_dropdown_menu_popup_elevation = 2131165468;
+    public static final int mtrl_exposed_dropdown_menu_popup_vertical_padding = 2131165470;
+    public static final int mtrl_min_touch_target_size = 2131165501;
+    public static final int mtrl_shape_corner_size_small_component = 2131165535;
+    public static final int mtrl_snackbar_background_corner_radius = 2131165547;
+    public static final int mtrl_textinput_box_label_cutout_padding = 2131165555;
+    public static final int mtrl_textinput_box_stroke_width_default = 2131165556;
+    public static final int mtrl_textinput_box_stroke_width_focused = 2131165557;
+    public static final int mtrl_textinput_counter_margin_start = 2131165558;
+}

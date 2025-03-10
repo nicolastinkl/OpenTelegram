@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<title>map</title>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body,
+        html,
+        #container {
+            position: relative;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        #result,
+        #result table {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body style="margin:0">
+    <div id="container"></div>
+    <div style="position: absolute;top: 20px;left: 20px;width: 100%;">
+        <input type="text" id="suggestId" placeholder="查询地点"
+            style="width: 180px;height: 30px;padding-left: 5px;border-color:#028FFF;" />
+        <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+
+        <button type="button"
+            style="width: 50px;height: 35px;color: white;background-color:#028FFF;border-radius: 5px;border-color:rgba(2, 141, 255, 0.548);"
+            onclick="send()">发送</button>
+    </div>
+    <div id="result" style="position: absolute;top:50px;left: 5px;display: none;">
+    </div>
+    <div id="resultClose" onclick="closeResilt()"
+        style="position: absolute;top: 50px;left: 190px;width: 15px;height: 15px;display: none;">X</div>
+</body>
+
+</html>
+<script type="text/javascript">
+    function getQueryString(name) {
+        const url_string = window.location.href; // window.location.href
+        console.log(url_string)
+        const url = new URL(url_string);
+        return url.searchParams.get(name);
+    }
+
+    var ak = getQueryString("ak");
+</script>
+<script type="text/javascript" src="load.js"></script>
+<script type="text/javascript">
+    //默认地理位置设置为欧亚学院南门内108.927928,34.180814
+    var x = 108.927928, y = 34.180814;
+    var map;
+    function G(id) {
+        return document.getElementById(id);
+    }
+
+    window.onload = function () {
+        var _x = getQueryString("lng");
+        var _y = getQueryString("lat");
+        if (_x == 0 || _x == undefined || _x == null || _x == "") {
+            x = 108.927928
+        } else {
+            x = _x;
+        }
+
+        if (_y == 0 || _y == undefined || _y == null || _y == "") {
+            y = 34.180814
+        } else {
+            y = _y;
+        }
+
+        if (navigator.geolocation) {
+            // navigator.geolocation.getCurrentPosition(showPosition); //获取当前坐标
+
+            map = new BMap.Map("container");  //创建MAP实例
+            var point = new BMap.Point(x, y);
+            map.centerAndZoom(point, 19);  // 初始化地图,设置中心点坐标和地图级别
+            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+
+            var markerMouse = new BMap.Marker(point);  // 创建标注
+            map.clearOverlays();    //清除地图上所有覆盖物
+            map.addOverlay(markerMouse);              // 将标注添加到地图中
+
+            // 覆盖区域图层测试
+            map.addTileLayer(new BMap.PanoramaCoverageLayer());
+            // var stCtrl = new BMap.PanoramaControl(); //构造全景控件
+            // stCtrl.setOffset(new BMap.Size(20, 20));
+            // map.addControl(stCtrl);
+
+            map.addEventListener("touchmove", function (e) {
+                map.enableDragging();
+            });
+            map.addEventListener("touchend", function (e) {
+                map.disableDragging();
+            });
+            map.disableDragging();
+            map.addEventListener('click', mouseChoosePoint)
+
+            // map.setHeading(64.5);//设置视角倾斜角
+            // map.setTilt(73);    //设置视角角度
+
+            // var navi3DCtrl = new BMap.NavigationControl3D();  // 添加3D控件
+            // map.addControl(navi3DCtrl);
+
+            // var scaleCtrl = new BMap.ScaleControl();  // 添加比例尺控件
+            // map.addControl(scaleCtrl);
+            // var zoomCtrl = new BMap.ZoomControl();  // 添加比例尺控件
+            // map.addControl(zoomCtrl);
+
+            var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+                {
+                    "input": "suggestId"
+                    , "location": map
+                });
+
+            ac.addEventListener("onhighlight", function (e) {  //鼠标放在下拉列表上的事件
+                var str = "";
+                var _value = e.fromitem.value;
+                var value = "";
+                if (e.fromitem.index > -1) {
+                    value = _value.province + _value.city + _value.district + _value.street + _value.business;
+                }
+                str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+                value = "";
+                if (e.toitem.index > -1) {
+                    _value = e.toitem.value;
+                    value = _value.province + _value.city + _value.district + _value.street + _value.business;
+                }
+                str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+                G("searchResultPanel").innerHTML = str;
+            });
+
+            var myValue;
+            ac.addEventListener("onconfirm", function (e) {    //鼠标点击下拉列表后的事件
+                var _value = e.item.value;
+                myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+                G("searchResultPanel").innerHTML = "onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+                setPlace();
+            });
+
+            function setPlace() {
+                map.clearOverlays();    //清除地图上所有覆盖物
+                function myFun() {
+                    var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+                    x = pp.lng;
+                    y = pp.lat;
+                    console.log("1" + JSON.stringify(pp))
+                    map.centerAndZoom(pp, 18);
+                    map.addOverlay(new BMap.Marker(pp));    //添加标注
+                }
+                var local = new BMap.LocalSearch(map, { //智能搜索
+                    onSearchComplete: myFun
+                });
+                local.search(myValue);
+            }
+
+            // 鼠标选点
+            function mouseChoosePoint(e) {
+                let point = { lng: e.point.lng, lat: e.point.lat }
+                map.centerAndZoom(point, 18);
+                var markerMouse = new BMap.Marker(point);  // 创建标注
+                map.clearOverlays();    //清除地图上所有覆盖物
+                map.addOverlay(markerMouse);              // 将标注添加到地图中
+                console.log(JSON.stringify(point))
+                thisPointId = (e.point.lng + '' + e.point.lat).toString();
+                x = e.point.lng;
+                y = e.point.lat;
+                thisPoint = point
+            }
+
+
+            return;
+        }
+        alert("你的浏览器不支持获取地理位置！");
+
+    };
+    function showPosition(position) {
+        x = position.coords.latitude;
+        y = position.coords.longitude;
+    }
+
+    function send() {
+
+        let data = ['web_app_location', '{"lat":' + y + ',"lng":' + x + '}']
+        let str = JSON.stringify(data)
+        console.log("native_message:" + str);
+        window.chrome.webview.postMessage(str);
+    }
+
+    function search() {
+        var starting = G("starting").value//出发地
+        var destination = G("destination").value//目标地
+
+        //步行规划路线
+        var walking = new BMap.WalkingRoute(map, { renderOptions: { map: map, panel: "result", autoViewport: true } });
+        walking.search(starting, destination);
+        walking.setResultsHtmlSetCallback( //设置结果列表创建后的回调函数
+            () => {
+                G('result').style.display = 'block'
+                G('resultClose').style.display = 'block'
+            }
+        )
+    }
+    function closeResilt() {
+        G('result').style.display = 'none'
+        G('resultClose').style.display = 'none'
+        map.clearOverlays();
+    }
+    function myself() {
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function (r) { //转到当前坐标
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                map.clearOverlays();
+                var mk = new BMap.Marker(r.point);// 创建标注
+                map.addOverlay(mk); //标记自身
+                map.panTo(r.point); //缩放至新位置
+            }
+            else {
+                alert('定位失败，请稍后重试！');
+            }
+        }, { enableHighAccuracy: true }) //开启精确定位
+    }
+</script>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/jmt_layout_corner"
+    android:padding="10dp"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content">
+    <TextView
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:id="@+id/jmt_popup_msg_hint_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>
